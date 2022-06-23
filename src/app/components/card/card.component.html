@@ -17,6 +17,12 @@
         <h2>{{ data.weather[0].description }}</h2>
         <h2 class="time">{{ getTime(index) }}</h2>
       </div>
+      <div class="details" *ngIf="details" >
+        <div class="detail">
+          <h2>Clouds</h2>
+          <h2>{{ data.clouds.all }}%</h2>
+        </div>
+      </div>
     </div>
   </div>
 </ng-container>

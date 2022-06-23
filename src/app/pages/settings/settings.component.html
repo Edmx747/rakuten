@@ -1,1 +1,28 @@
-<p>settings works!</p>
+<div mat-dialog-content class="container">
+  <div class="inputs">
+    <!-- <div class="max-history">
+      <mat-label>Max history length</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="settings.maxHistory"
+        placeholder=""
+        [value]="settings.maxHistory"
+      />
+    </div> -->
+    <div class="details">
+      <mat-label>details</mat-label>
+      <input
+        matInput
+        type="checkbox"
+        [(ngModel)]="settings.details"
+        placeholder=""
+        [value]="settings.details"
+      />
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button [mat-dialog-close]="settings" cdkFocusInitial>SAVE</button>
+</div>

@@ -10,6 +10,7 @@ import * as moment from 'moment';
 export class CardComponent implements OnInit {
   @Input() datas: Weather[];
   @Input() time: string;
+  @Input() details: boolean;
 
   constructor() { }
   ngOnInit(): void {

@@ -1,3 +1,5 @@
+import { Setting } from './../../models/setting';
+import { SettingsComponent } from './../settings/settings.component';
 import { MatSelectionListChange } from '@angular/material/list';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -10,6 +12,7 @@ import { SessionStorage } from 'src/app/helpers/enum/sessionStorageKey';
 import { CitiesHistory } from 'src/app/models/citiesHistory';
 import { Weather } from 'src/app/models/weather';
 import { WeatherService } from 'src/app/services/weather.service';
+import { MatDialog } from '@angular/material/dialog';
 moment.locale('en-gb');
 
 @Component({
@@ -25,8 +28,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   cities: Weather[] = [];
   selectedCities: string[] = [];
   today: string;
-
-  constructor(private weatherService: WeatherService) {}
+  settings: Setting = {
+    maxHistory: 5,
+    details: false
+  }
+  constructor(private weatherService: WeatherService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     setInterval(() => {
@@ -35,6 +41,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.load()
+  }
+
+  load(): void {
     this.initCitiesFromHistory();
     this.initSelectedCities();
   }
@@ -53,8 +63,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
     );
   }
 
-
-
   private initCitiesFromHistory(): void {
     const history = sessionStorage.getItem(SessionStorage.History);
     if (history) {
@@ -66,9 +74,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private initSelectedCities(): void {
-    if(this.citiesHistory.length > 0){
+    if (this.citiesHistory.length > 0) {
       this.citiesHistory.forEach(city => {
-        if(city.selected){
+        console.log('city:', city)
+        if (city.selected) {
           this.getWeather(city.name, true);
         }
       })
@@ -77,8 +86,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   getWeather(city: string, isHistory: boolean = false): void {
     this.weatherService.getWeatherByCity(city).subscribe((res: Weather) => {
+      console.log('res:', res)
       this.control.setValue('');
-      if(!this.selectedCities.includes(res.name)){
+      if (!this.selectedCities.includes(res.name) && this.citiesHistory.find(city => city.name !== res.name)) {
         this.cities.push(res);
       }
       if (!isHistory) {
@@ -86,17 +96,31 @@ export class HomeComponent implements OnInit, AfterViewInit {
           name: res.name,
           selected: true
         });
-        this.citiesHistory.splice(0, 1);
         sessionStorage.setItem(SessionStorage.History, JSON.stringify(this.citiesHistory));
       }
     });
   }
 
-  onSelectionChange(event:MatSelectionListChange): void {
-    if(event.options[0].selected){
+  onSelectionChange(event: MatSelectionListChange): void {
+    if (event.options[0].selected) {
       this.getWeather(event.options[0].value, true)
     } else {
       this.cities = this.cities.filter(city => city.name !== event.options[0].value)
     }
+  }
+
+  openSettings(): void {
+    const dialogRef = this.dialog.open(SettingsComponent, {
+      data: {
+        setting: this.settings
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: Setting) => {
+      if (result) {
+        this.settings.maxHistory = this.settings.maxHistory;
+        this.settings.details = this.settings.details;
+        this.load()
+      }
+    });
   }
 }
