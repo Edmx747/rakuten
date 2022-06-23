@@ -1,0 +1,60 @@
+<div class="home">
+  <div class="container">
+    <mat-drawer-container class="drawer-container">
+      <mat-drawer class="drawer" mode="side" position="end" opened>
+        <form class="form">
+          <mat-form-field
+            class="mat-form-field"
+            appearance="standard"
+            color="black"
+          >
+            <input
+              type="text"
+              placeholder="City"
+              matInput
+              [formControl]="control"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #auto="matAutocomplete"
+              (optionSelected)="getWeather($event.option.value)"
+            >
+              <mat-option
+                class="option"
+                *ngFor="let option of filteredOptions$ | async"
+                [value]="option"
+              >
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+          <div class="icon">
+            <mat-icon>search</mat-icon>
+          </div>
+        </form>
+        <mat-selection-list class="mat-selection-list" [multiple]="true" (selectionChange)="onSelectionChange($event)">
+          <mat-list-option
+            class="mat-list-option"
+            *ngFor="let item of citiesHistory; let index = index"
+            [value]="item.name"
+            [selected]="item.selected"
+          >
+            <div class="history">
+              <div class="history-city">{{ item.name }}</div>
+            </div>
+          </mat-list-option>
+        </mat-selection-list>
+      </mat-drawer>
+      <mat-drawer-content class="mat-drawer-content">
+        <div class="today">
+          <h1>{{ today }}</h1>
+        </div>
+        <div class="setting">
+          <mat-icon>settings</mat-icon>
+        </div>
+        <app-card class="card" [datas]="cities" [time]="today"></app-card>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </div>
+</div>
