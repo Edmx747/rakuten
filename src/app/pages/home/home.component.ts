@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     setInterval(() => {
-      this.today = moment().format('LLLL LTS');
+      this.today = moment().format('LL LTS');
     }, 1000);
   }
 
