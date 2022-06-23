@@ -10,14 +10,18 @@ import { Weather } from '../models/weather';
 })
 export class WeatherService {
   private openWeatherUrl: string;
+  private openWeatherKey: string;
   constructor(protected httpClient: HttpClient) {
-    this.openWeatherUrl = environment.openWeatherUrl
+    this.openWeatherUrl = environment.openWeatherUrl;
+    this.openWeatherKey = environment.openWeatherKey;
   }
 
-  public read(city: string): Observable<Weather> {
+  public getWeatherByCity(city: string, units = 'metric'): Observable<Weather> {
     let queryParams = new HttpParams();
     queryParams = queryParams.append('q', city);
-    return this.httpClient.get<Weather>(`${ this.openWeatherUrl}/${Endpoints.Direct}}`, { params: queryParams });
+    queryParams = queryParams.append('appid', this.openWeatherKey);
+    queryParams = queryParams.append('units', units);
+    return this.httpClient.get<Weather>(`${this.openWeatherUrl}/${Endpoints.Weather}`, { params: queryParams });
   }
 
 }
