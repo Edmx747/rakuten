@@ -1,0 +1,22 @@
+<ng-container *ngIf="datas">
+  <div *ngFor="let data of datas; let index = index" class="container">
+    <div class="item">
+      <div class="title">
+        <h1>{{ data.name }}</h1>
+      </div>
+      <div class="temperature">
+        <div class="temp">
+          <h2>{{ data.main.temp | number: "1.0-0" }}&deg;C</h2>
+        </div>
+      </div>
+      <img
+        src="http://openweathermap.org/img/wn/{{ data.weather[0].icon }}@4x.png"
+        alt="condition"
+      />
+      <div class="description">
+        <h2>{{ data.weather[0].description }}</h2>
+        <h2 class="time">{{ getTime(index) }}</h2>
+      </div>
+    </div>
+  </div>
+</ng-container>
