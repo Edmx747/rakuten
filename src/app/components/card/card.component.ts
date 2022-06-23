@@ -15,6 +15,6 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
   }
   getTime(index: number): string {
-    return moment(this.time,'LLLL LTS').add(this.datas[index].timezone,'s').format('LTS');
+    return moment(this.time,'LL LTS').add(this.datas[index].timezone,'s').format('LTS');
   }
 }
